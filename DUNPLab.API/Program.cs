@@ -1,6 +1,8 @@
 using DUNPLab.API.Infrastructure;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using DUNPLab.API.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,5 +42,6 @@ app.UseHangfireServer();
 app.UseHangfireDashboard();
 
 
+RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
 
 app.Run();

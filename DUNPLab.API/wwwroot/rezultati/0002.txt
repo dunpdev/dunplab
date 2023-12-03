@@ -1,0 +1,15 @@
+Tarik Ibrahimovic,0002,20231203145633
+CRP,2,false
+LDH,3,false
+Ferritin,1,true
+D-Dimer,4,false
+Procalcitonin,3,false
+Troponin,3,false
+Creatinine,9,false
+Lymphocyte Count,9,true
+Neutrophil Count,10,false
+Prothrombin Time,11,false
+International Normalized Ratio,6,false
+Partial Thromboplastin Time,4,false
+Fibrinogen,3,false
+Interleukin,8,false
