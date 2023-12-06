@@ -33,7 +33,7 @@ namespace DUNPLab.API.Jobs
                 {
                     ImeIPrezime = testerFullName,
                     KodEpruvete = kodEpruvete,
-                    DatumVreme = DateTime.ParseExact(date, "yyyyMMddHHmmss", null),
+                    DatumVreme = DateTime.SpecifyKind(DateTime.ParseExact(date, "yyyyMMddHHmmss", null), DateTimeKind.Utc),
                 };
                 var vrednostiOdMasine = new List<VrednostOdMasine>();
                 foreach (var line in substancesResults)

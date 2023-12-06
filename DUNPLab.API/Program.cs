@@ -1,20 +1,20 @@
 using DUNPLab.API.Infrastructure;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
 using DUNPLab.API.Jobs;
+using Hangfire.PostgreSql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<DunpContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("default")));
 
 builder.Services.AddHangfire(config =>
 {
     config.UseSimpleAssemblyNameTypeSerializer();
     config.UseRecommendedSerializerSettings();
-    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("default"));
+    config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("default"));
 });
 builder.Services.AddHangfireServer();
 
@@ -43,5 +43,6 @@ app.UseHangfireDashboard();
 
 
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
+RecurringJob.AddOrUpdate<ProcessedFilesRemoverJob>(x => x.DeleteProcessedResults(), Cron.Daily(13, 30));
 
 app.Run();
