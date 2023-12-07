@@ -1,5 +1,7 @@
 using DUNPLab.API.Infrastructure;
+using DUNPLab.API.Services;
 using Hangfire;
+using Hangfire.Server;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,9 +19,9 @@ builder.Services.AddHangfire(config =>
 builder.Services.AddHangfireServer();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IBackgroundJobsService, BackgroundJobsService>();
 
 var app = builder.Build();
 
@@ -37,8 +39,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseHangfireServer();
+
 app.UseHangfireDashboard();
 
-
+// Add this line to schedule your job
+RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.Rezultati(), "*/10 * * * * *");
 
 app.Run();
