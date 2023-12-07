@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DUNPLab.API.Migrations
 {
     [DbContext(typeof(DunpContext))]
-    [Migration("20231206212742_relationTestiranjeZahtev")]
-    partial class relationTestiranjeZahtev
+    [Migration("20231207091556_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,7 +282,7 @@ namespace DUNPLab.API.Migrations
                             Status = "In Progress",
                             TestOdradio = "Tester 1",
                             UkupnaCena = 300.0,
-                            ZahtevId = 0
+                            ZahtevId = 1
                         },
                         new
                         {
@@ -297,7 +297,7 @@ namespace DUNPLab.API.Migrations
                             Status = "In Progress",
                             TestOdradio = "Tester 2",
                             UkupnaCena = 400.0,
-                            ZahtevId = 0
+                            ZahtevId = 2
                         });
                 });
 
@@ -351,6 +351,36 @@ namespace DUNPLab.API.Migrations
                     b.HasIndex("IdTestiranja");
 
                     b.ToTable("Uzorci");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Cena = 100.0,
+                            IdTestiranja = 1,
+                            Izmenio = "Modifier 1",
+                            IzmenioDatumVreme = new DateTime(2023, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            KodEpruvete = "E1",
+                            Komentar = "Comment 1",
+                            KonacanRezultat = "Result 1",
+                            Kutija = "BX20230101000001",
+                            MetodTestiranja = "Method 1",
+                            Naziv = "Sample 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Cena = 200.0,
+                            IdTestiranja = 2,
+                            Izmenio = "Modifier 2",
+                            IzmenioDatumVreme = new DateTime(2023, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            KodEpruvete = "E2",
+                            Komentar = "Comment 2",
+                            KonacanRezultat = "Result 2",
+                            Kutija = "BX20230201000002",
+                            MetodTestiranja = "Method 2",
+                            Naziv = "Sample 2"
+                        });
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Zahtev", b =>

@@ -24,8 +24,8 @@ namespace DUNPLab.API.Infrastructure
 
             // Seed data for Zahtev
             modelBuilder.Entity<Zahtev>().HasData(
-                new Zahtev { Id = 1, DatumTestiranja = new DateTime(2023, 1, 1), TestiranjeId = null, PacijentId = 1, JeLiObradjen = false },
-                new Zahtev { Id = 2, DatumTestiranja = new DateTime(2023, 2, 1), TestiranjeId = null, PacijentId = 2, JeLiObradjen = false }
+                new Zahtev { Id = 1, DatumTestiranja = new DateTime(2023, 1, 1), TestiranjeId = 1, PacijentId = 1, JeLiObradjen = false },
+                new Zahtev { Id = 2, DatumTestiranja = new DateTime(2023, 2, 1), TestiranjeId = 2, PacijentId = 2, JeLiObradjen = false }
             );
 
             // Seed data for Testiranje
@@ -41,6 +41,10 @@ namespace DUNPLab.API.Infrastructure
                 new ZahtevSubstanca { Id = 4, ZahtevId = 2, SubstancaId = 2 }
             );
 
+            modelBuilder.Entity<Uzorak>().HasData(
+                new Uzorak { Id = 1, Naziv = "Sample 1", KodEpruvete = "E1", MetodTestiranja = "Method 1", KonacanRezultat = "Result 1", Komentar = "Comment 1", Cena = 100.0, Kutija = "BX20230101000001", IdTestiranja = 1, Izmenio = "Modifier 1", IzmenioDatumVreme = new DateTime(2023, 1, 1, 12, 0, 0) },
+                new Uzorak { Id = 2, Naziv = "Sample 2", KodEpruvete = "E2", MetodTestiranja = "Method 2", KonacanRezultat = "Result 2", Komentar = "Comment 2", Cena = 200.0, Kutija = "BX20230201000002", IdTestiranja = 2, Izmenio = "Modifier 2", IzmenioDatumVreme = new DateTime(2023, 2, 1, 12, 0, 0) }
+            );
         }
 
 
