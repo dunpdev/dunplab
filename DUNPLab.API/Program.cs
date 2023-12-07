@@ -1,4 +1,5 @@
 using DUNPLab.API.Infrastructure;
+using DUNPLab.API.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ builder.Services.AddHangfire(config =>
     config.UseSqlServerStorage(builder.Configuration.GetConnectionString("default"));
 });
 builder.Services.AddHangfireServer();
+
+builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
