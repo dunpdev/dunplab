@@ -1,0 +1,13 @@
+.vs
+bin
+obj
+Debug
+net8.0
+/DUNPLab.API/obj/project.nuget.cache
+/DUNPLab.API/obj/Debug/net8.0/DUNPLab.API.assets.cache
+/DUNPLab.API/obj/Debug/net8.0/DUNPLab.API.csproj.AssemblyReference.cache
+/DUNPLab.API/obj/Debug/net8.0/DUNPLab.API.GeneratedMSBuildEditorConfig.editorconfig
+/DUNPLab.API/obj/DUNPLab.API.csproj.nuget.dgspec.json
+/DUNPLab.API/obj/DUNPLab.API.csproj.nuget.g.props
+/DUNPLab.API/obj/project.assets.json
+*.user
