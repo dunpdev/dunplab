@@ -40,8 +40,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseHangfireServer();
+
 app.UseHangfireDashboard();
 
-
+RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => service.Transfer(), "*/5 * * * *");
 
 app.Run();
