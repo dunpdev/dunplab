@@ -1,5 +1,7 @@
 using DUNPLab.API.Infrastructure;
 using DUNPLab.API.Services;
+using DUNPLab.API.Jobs;
+using DUNPLab.API.Models;
 using Hangfire;
 using Hangfire.Server;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,8 @@ builder.Services.AddHangfire(config =>
 });
 builder.Services.AddHangfireServer();
 builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
+builder.Services.AddHangfireServer();
+builder.Services.AddScoped<IBackgroundJobsService, BackgroundJobsService>();
 
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
 builder.Services.AddTransient<IArhivirajPacijenteService, ArhivirajPacijenteService>();
@@ -32,6 +36,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IBackgroundJobsService, BackgroundJobsService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
+builder.Services.Configure<GmailCredentials>(
+    builder.Configuration.GetSection("GmailCredentials"));
+
 
 var app = builder.Build();
 
@@ -64,5 +72,6 @@ RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
 RecurringJob.AddOrUpdate<IArhivirajPacijenteService>("MuhamedovJob", x => x.ArhivirajPacijente(), Cron.Daily(12));
 RecurringJob.AddOrUpdate<ProcessedFilesRemoverJob>(x => x.DeleteProcessedResults(), Cron.Daily(13, 30));
+RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.SendEmail(), Cron.Daily(16));
 
 app.Run();

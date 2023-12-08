@@ -64,5 +64,6 @@ namespace DUNPLab.API.Infrastructure
         public DbSet<Email> Emails { get; set; }
         public DbSet<DUNPLab.API.Models.File> Files { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<EmailNotification> EmailNotifications { get; set; }
     }
 }
