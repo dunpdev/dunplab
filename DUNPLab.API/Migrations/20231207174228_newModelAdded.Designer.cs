@@ -4,6 +4,7 @@ using DUNPLab.API.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DUNPLab.API.Migrations
 {
     [DbContext(typeof(DunpContext))]
-    partial class DunpContextModelSnapshot : ModelSnapshot
+    [Migration("20231207174228_newModelAdded")]
+    partial class newModelAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,15 +70,7 @@ namespace DUNPLab.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("From")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -193,33 +188,6 @@ namespace DUNPLab.API.Migrations
                     b.HasIndex("IdUzorka");
 
                     b.ToTable("Rezultati");
-                });
-
-            modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DatumVreme")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImeIPrezime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("JesuLiPrebaceni")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("KodEpruvete")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RezultatiOdMasine");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Supstanca", b =>
@@ -368,32 +336,6 @@ namespace DUNPLab.API.Migrations
                     b.ToTable("Uzorci");
                 });
 
-            modelBuilder.Entity("DUNPLab.API.Models.VrednostOdMasine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("JeLiBiloGreske")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("OznakaSubstance")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RezultatOdMasineId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Vrednost")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RezultatOdMasineId");
-
-                    b.ToTable("VrednostiOdMasine");
             modelBuilder.Entity("DUNPLab.API.Models.Email", b =>
                 {
                     b.HasOne("DUNPLab.API.Models.File", "File")
@@ -433,22 +375,6 @@ namespace DUNPLab.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Testiranje");
-                });
-
-            modelBuilder.Entity("DUNPLab.API.Models.VrednostOdMasine", b =>
-                {
-                    b.HasOne("DUNPLab.API.Models.RezultatOdMasine", "RezultatOdMasine")
-                        .WithMany("VrednostiOdMasine")
-                        .HasForeignKey("RezultatOdMasineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RezultatOdMasine");
-                });
-
-            modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
-                {
-                    b.Navigation("VrednostiOdMasine");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Testiranje", b =>
