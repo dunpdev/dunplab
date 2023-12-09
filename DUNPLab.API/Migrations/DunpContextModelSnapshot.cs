@@ -394,73 +394,74 @@ namespace DUNPLab.API.Migrations
                     b.HasIndex("RezultatOdMasineId");
 
                     b.ToTable("VrednostiOdMasine");
-            modelBuilder.Entity("DUNPLab.API.Models.Email", b =>
-                {
-                    b.HasOne("DUNPLab.API.Models.File", "File")
-                        .WithMany()
-                        .HasForeignKey("IdFile")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("DUNPLab.API.Models.Email", b =>
+                        {
+                            b.HasOne("DUNPLab.API.Models.File", "File")
+                                .WithMany()
+                                .HasForeignKey("IdFile")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("File");
-                });
+                            b.Navigation("File");
+                        });
 
-            modelBuilder.Entity("DUNPLab.API.Models.Rezultat", b =>
-                {
-                    b.HasOne("DUNPLab.API.Models.Supstanca", "Supstanca")
-                        .WithMany()
-                        .HasForeignKey("IdSupstance")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("DUNPLab.API.Models.Rezultat", b =>
+                        {
+                            b.HasOne("DUNPLab.API.Models.Supstanca", "Supstanca")
+                                .WithMany()
+                                .HasForeignKey("IdSupstance")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.HasOne("DUNPLab.API.Models.Uzorak", "Uzorak")
-                        .WithMany("Rezultati")
-                        .HasForeignKey("IdUzorka")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b.HasOne("DUNPLab.API.Models.Uzorak", "Uzorak")
+                                .WithMany("Rezultati")
+                                .HasForeignKey("IdUzorka")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("Supstanca");
+                            b.Navigation("Supstanca");
 
-                    b.Navigation("Uzorak");
-                });
+                            b.Navigation("Uzorak");
+                        });
 
-            modelBuilder.Entity("DUNPLab.API.Models.Uzorak", b =>
-                {
-                    b.HasOne("DUNPLab.API.Models.Testiranje", "Testiranje")
-                        .WithMany("Uzorci")
-                        .HasForeignKey("IdTestiranja")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("DUNPLab.API.Models.Uzorak", b =>
+                        {
+                            b.HasOne("DUNPLab.API.Models.Testiranje", "Testiranje")
+                                .WithMany("Uzorci")
+                                .HasForeignKey("IdTestiranja")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("Testiranje");
-                });
+                            b.Navigation("Testiranje");
+                        });
 
-            modelBuilder.Entity("DUNPLab.API.Models.VrednostOdMasine", b =>
-                {
-                    b.HasOne("DUNPLab.API.Models.RezultatOdMasine", "RezultatOdMasine")
-                        .WithMany("VrednostiOdMasine")
-                        .HasForeignKey("RezultatOdMasineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("DUNPLab.API.Models.VrednostOdMasine", b =>
+                        {
+                            b.HasOne("DUNPLab.API.Models.RezultatOdMasine", "RezultatOdMasine")
+                                .WithMany("VrednostiOdMasine")
+                                .HasForeignKey("RezultatOdMasineId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("RezultatOdMasine");
-                });
+                            b.Navigation("RezultatOdMasine");
+                        });
 
-            modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
-                {
-                    b.Navigation("VrednostiOdMasine");
-                });
+                    modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
+                        {
+                            b.Navigation("VrednostiOdMasine");
+                        });
 
-            modelBuilder.Entity("DUNPLab.API.Models.Testiranje", b =>
-                {
-                    b.Navigation("Uzorci");
-                });
+                    modelBuilder.Entity("DUNPLab.API.Models.Testiranje", b =>
+                        {
+                            b.Navigation("Uzorci");
+                        });
 
-            modelBuilder.Entity("DUNPLab.API.Models.Uzorak", b =>
-                {
-                    b.Navigation("Rezultati");
-                });
+                    modelBuilder.Entity("DUNPLab.API.Models.Uzorak", b =>
+                        {
+                            b.Navigation("Rezultati");
+                        });
 #pragma warning restore 612, 618
+                });
         }
     }
 }
