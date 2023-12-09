@@ -1,4 +1,5 @@
 using DUNPLab.API.Infrastructure;
+using DUNPLab.API.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,8 @@ app.MapControllers();
 app.UseHangfireServer();
 app.UseHangfireDashboard();
 
+// Register jobs
+RecurringJob.AddOrUpdate<FileBackupService>(x => x.BackupFiles(), Cron.MinuteInterval(2));
 
 
 app.Run();
