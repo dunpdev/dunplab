@@ -13,5 +13,7 @@ namespace DUNPLab.API.Models
         public int IdSupstance { get; set; }
         [ForeignKey("IdSupstance")]
         public Supstanca Supstanca { get; set; } // Supstanca za koju je rezultat
+
+        public bool Obradjen { get; set; } = false; // Da li je rezultat obradjen    
     }
 }
