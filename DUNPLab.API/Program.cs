@@ -1,6 +1,7 @@
 using DUNPLab.API.Infrastructure;
 using DUNPLab.API.Jobs.PacijentiJobs;
 using DUNPLab.API.Services.Pacijenti;
+using DUNPLab.API.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -23,11 +24,12 @@ builder.Services.AddHangfireServer((provider, serverOptions) =>
 {
     using (var serviceScope = provider.CreateScope())
     {
-
         var pacijentiRegistrator = serviceScope.ServiceProvider.GetRequiredService<IPacijentiJobRegistrator>();
         pacijentiRegistrator.Register();
     }
 });
+builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -49,8 +51,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseHangfireServer();
+
 app.UseHangfireDashboard();
 
+RecurringJob.AddOrUpdate<FileBackupService>(x => x.BackupFiles(), Cron.MinuteInterval(2));
 
+RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => service.Transfer(), "*/5 * * * *");
 
 app.Run();

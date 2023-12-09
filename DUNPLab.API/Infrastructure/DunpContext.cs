@@ -13,6 +13,8 @@ namespace DUNPLab.API.Infrastructure
         public DbSet<Testiranje> Testiranja { get; set; }
         public DbSet<Supstanca> Supstance { get; set; }
         public DbSet<Rezultat> Rezultati { get; set; }
+        public DbSet<RezultatOdMasine> RezultatiOdMasine { get; set; }
+        public DbSet<VrednostOdMasine> VrednostiOdMasine { get; set; }
         public DbSet<ATNotification> Notifications { get; set; }
         public DbSet<NotificationRecipient> Recipients { get; set; }
     }
