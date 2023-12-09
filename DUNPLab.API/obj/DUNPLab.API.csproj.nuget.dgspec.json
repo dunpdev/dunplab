@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Tarik\\source\\repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj": {}
+    "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Tarik\\source\\repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj": {
+    "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tarik\\source\\repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
+        "projectUniqueName": "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
         "projectName": "DUNPLab.API",
-        "projectPath": "C:\\Users\\Tarik\\source\\repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
-        "packagesPath": "C:\\Users\\Tarik\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tarik\\source\\repos\\dunplab\\DUNPLab.API\\obj\\",
+        "projectPath": "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
+        "packagesPath": "C:\\Users\\TarikIbrahimovic(SJJ\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Tarik\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\TarikIbrahimovic(SJJ\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
