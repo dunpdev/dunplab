@@ -1,4 +1,5 @@
 using DUNPLab.API.Infrastructure;
+using DUNPLab.API.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ builder.Services.AddHangfire(config =>
     config.UseSqlServerStorage(builder.Configuration.GetConnectionString("default"));
 });
 builder.Services.AddHangfireServer();
+
+builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -39,6 +42,6 @@ app.MapControllers();
 app.UseHangfireServer();
 app.UseHangfireDashboard();
 
-
+RecurringJob.AddOrUpdate<IOdredjivanjeStatusa>("odredjivanje-statusa", service => service.Odredi(), "*/5 * * * *");
 
 app.Run();
