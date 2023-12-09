@@ -598,24 +598,24 @@ namespace DUNPLab.API.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DUNPLab.API.Models.Rezultat", b =>
-                {
-                    b.HasOne("DUNPLab.API.Models.Supstanca", "Supstanca")
-                        .WithMany()
-                        .HasForeignKey("IdSupstance")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("DUNPLab.API.Models.Rezultat", b =>
+                        {
+                            b.HasOne("DUNPLab.API.Models.Supstanca", "Supstanca")
+                                .WithMany()
+                                .HasForeignKey("IdSupstance")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.HasOne("DUNPLab.API.Models.Uzorak", "Uzorak")
-                        .WithMany("Rezultati")
-                        .HasForeignKey("IdUzorka")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b.HasOne("DUNPLab.API.Models.Uzorak", "Uzorak")
+                                .WithMany("Rezultati")
+                                .HasForeignKey("IdUzorka")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("Supstanca");
+                            b.Navigation("Supstanca");
 
-                    b.Navigation("Uzorak");
-                });
+                            b.Navigation("Uzorak");
+                        });
 
             modelBuilder.Entity("DUNPLab.API.Models.Supstanca", b =>
                 {
