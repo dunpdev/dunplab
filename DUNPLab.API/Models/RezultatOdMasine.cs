@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DUNPLab.API.Models
+﻿namespace DUNPLab.API.Models
 {
     public class RezultatOdMasine
     {
