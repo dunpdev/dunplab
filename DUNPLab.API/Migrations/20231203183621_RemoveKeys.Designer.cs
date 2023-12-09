@@ -4,6 +4,7 @@ using DUNPLab.API.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DUNPLab.API.Migrations
 {
     [DbContext(typeof(DunpContext))]
-    partial class DunpContextModelSnapshot : ModelSnapshot
+    [Migration("20231203183621_RemoveKeys")]
+    partial class RemoveKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,12 +300,17 @@ namespace DUNPLab.API.Migrations
                     b.Property<int>("RezultatOdMasineId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SubstancaId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Vrednost")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RezultatOdMasineId");
+
+                    b.HasIndex("SubstancaId");
 
                     b.ToTable("VrednostiOdMasine");
                 });
@@ -345,7 +353,15 @@ namespace DUNPLab.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DUNPLab.API.Models.Supstanca", "Substanca")
+                        .WithMany()
+                        .HasForeignKey("SubstancaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("RezultatOdMasine");
+
+                    b.Navigation("Substanca");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
