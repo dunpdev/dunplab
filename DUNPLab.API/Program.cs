@@ -72,6 +72,6 @@ RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
 RecurringJob.AddOrUpdate<IArhivirajPacijenteService>("MuhamedovJob", x => x.ArhivirajPacijente(), Cron.Daily(12));
 RecurringJob.AddOrUpdate<ProcessedFilesRemoverJob>(x => x.DeleteProcessedResults(), Cron.Daily(13, 30));
-RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.SendEmail(), Cron.Daily(16));
+RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.PrepareEmail(), Cron.Daily(16));
 
 app.Run();

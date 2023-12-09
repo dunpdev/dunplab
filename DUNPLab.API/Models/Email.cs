@@ -10,7 +10,7 @@ namespace DUNPLab.API.Models
         public string Body { get; set; }
         public string From { get; set; }
         public DateTime? Sent { get; set; }
-        public int IdFile { get; set; }
+        public int? IdFile { get; set; }
         [ForeignKey("IdFile")]
         public File File { get; set; }
     }

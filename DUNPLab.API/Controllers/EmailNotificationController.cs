@@ -18,7 +18,7 @@ namespace DUNPLab.API.Controllers
         }
 
         [HttpPost("add-notification")]
-        public IActionResult AddNotification([FromBody] EmailNotificationDto notification)
+        public async Task<IActionResult> AddNotification([FromBody] EmailNotificationDto notification)
         {
             var emailNotification = new EmailNotification
             {
@@ -27,8 +27,10 @@ namespace DUNPLab.API.Controllers
                 From = notification.From,
                 Subject = notification.Subject
             };
+
             context.EmailNotifications.Add(emailNotification);
-            context.SaveChanges();
+            await backgroundJobsService.PrepareEmail();
+            await context.SaveChangesAsync();
             return Ok(emailNotification);
         }
 
@@ -36,7 +38,7 @@ namespace DUNPLab.API.Controllers
         [HttpGet("FireHnagfire", Name = "FireHnagfire")]
         public async Task<IActionResult> FireHnagfire()
         {
-            await backgroundJobsService.SendEmail();
+            await backgroundJobsService.PrepareEmail();
             return Ok();
         }
 
