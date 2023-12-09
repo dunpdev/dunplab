@@ -1,3 +1,5 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
 ﻿namespace DUNPLab.API.Models
 {
     public class RezultatOdMasine
@@ -10,4 +12,3 @@
         public ICollection<VrednostOdMasine> VrednostiOdMasine { get; set; }
     }
 }
-

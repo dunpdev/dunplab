@@ -7,6 +7,7 @@ namespace DUNPLab.API.Infrastructure
     {
         public DunpContext(DbContextOptions<DunpContext> options) : base(options)
         {
+
         }
         public DbSet<Pacijent> Pacijenti { get; set; }
         public DbSet<Uzorak> Uzorci { get; set; }

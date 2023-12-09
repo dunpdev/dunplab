@@ -1,0 +1,15 @@
+Ensar Hamzic,0001,20231203144735
+CRP,3,false
+LDH,5,false
+Ferritin,6,false
+D-Dimer,7,false
+Procalcitonin,8,false
+Troponin,9,false
+Creatinine,10,false
+Lymphocyte Count,11,false
+Neutrophil Count,12,false
+Prothrombin Time,13,false
+International Normalized Ratio,14,false
+Partial Thromboplastin Time,15,false
+Fibrinogen,16,false
+Interleukin,17,false
