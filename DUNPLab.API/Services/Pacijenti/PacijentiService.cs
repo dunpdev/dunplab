@@ -3,6 +3,7 @@ using DUNPLab.API.Dtos.Mapping;
 using DUNPLab.API.Infrastructure;
 using DUNPLab.API.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace DUNPLab.API.Services.Pacijenti
 {
@@ -29,6 +30,8 @@ namespace DUNPLab.API.Services.Pacijenti
                     var doesExist = await CheckIfExistsBasedOnJmbg(pacijenti[randomNumber].JMBG);
                     if (doesExist == false)
                     {
+                        if (IsValidEmail(pacijenti[randomNumber].Email) == false)
+                            throw new Exception("User Email not valid");
                         if (pickedIds.Contains(randomNumber) == false)
                         {
                             selectedFlag = true;
@@ -90,6 +93,19 @@ namespace DUNPLab.API.Services.Pacijenti
             if(result == null)
                 return false;
             return true;
+        }
+
+        public bool IsValidEmail(string email)
+        {
+ 
+                // Define a regular expression for a simple email validation
+                string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+
+                // Create a Regex object
+                Regex regex = new Regex(pattern);
+
+                // Use the IsMatch method to check if the email matches the pattern
+                return regex.IsMatch(email);
         }
     }
 }
