@@ -43,6 +43,8 @@ app.UseHangfireServer();
 
 app.UseHangfireDashboard();
 
+RecurringJob.AddOrUpdate<FileBackupService>(x => x.BackupFiles(), Cron.MinuteInterval(2));
+
 RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => service.Transfer(), "*/5 * * * *");
 
 app.Run();
