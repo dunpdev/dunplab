@@ -19,7 +19,7 @@ public class BackgroundJobsService : IBackgroundJobsService
         this.configuration = configuration.Value;
     }
 
-    public async Task SendEmail()
+    public async Task PrepareEmail()
     {
         var emails = await context.EmailNotifications.Where(x => x.TimeOfSending.Date == DateTime.Now.Date).ToListAsync();
         var patients = await context.Pacijenti.ToListAsync();
@@ -28,26 +28,18 @@ public class BackgroundJobsService : IBackgroundJobsService
         {
             foreach (var patient in patients)
             {
-                var e = new MailMessage
+                var e = new Email
                 {
-                    From = new MailAddress(email.From),
+                    To = patient.Email,
                     Subject = email.Subject,
                     Body = email.Message,
-                    To = { patient.Email }
+                    From = configuration.Email,
+                    Sent = null
                 };
-                var smtp = new SmtpClient("smtp.gmail.com", 587)
-                {
-                    UseDefaultCredentials = false,
-                    EnableSsl = true,
-                    Credentials = new NetworkCredential(
-                    configuration?.Email,
-                    configuration?.Password)
-                };
-                smtp.Send(e);
+                context.Emails.Add(e);
             }
         }
 
-        context.EmailNotifications.RemoveRange(emails);
         await context.SaveChangesAsync();
     }
 }

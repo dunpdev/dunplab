@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DUNPLab.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37415e2e4df16d1705f33a936d1b9821b87343e3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c62c97905f516b2f0c8398e5b235e73008447c59")]
 [assembly: System.Reflection.AssemblyProductAttribute("DUNPLab.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DUNPLab.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

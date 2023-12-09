@@ -65,6 +65,6 @@ app.UseHangfireDashboard();
 RecurringJob.AddOrUpdate<FileBackupService>(x => x.BackupFiles(), Cron.MinuteInterval(2));
 
 RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => service.Transfer(), "*/5 * * * *");
-RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.SendEmail(), Cron.Daily(16));
+RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.PrepareEmail(), Cron.Daily(16));
 
 app.Run();
