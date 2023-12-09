@@ -19,15 +19,8 @@ builder.Services.AddHangfire(config =>
     config.UseSqlServerStorage(builder.Configuration.GetConnectionString("default"));
 });
 builder.Services.AddScoped<IPacijentiService, PacijentiService>();
-builder.Services.AddScoped<IPacijentiJobRegistrator, PacijentiJobRegistrator>();
-builder.Services.AddHangfireServer((provider, serverOptions) =>
-{
-    using (var serviceScope = provider.CreateScope())
-    {
-        var pacijentiRegistrator = serviceScope.ServiceProvider.GetRequiredService<IPacijentiJobRegistrator>();
-        pacijentiRegistrator.Register();
-    }
-});
+/*builder.Services.AddScoped<IPacijentiJobRegistrator, PacijentiJobRegistrator>(); Comment out job registrator  */
+builder.Services.AddHangfireServer();
 builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
@@ -61,6 +54,7 @@ RecurringJob.AddOrUpdate<IOdredjivanjeStatusa>("odredjivanje-statusa", service =
 RecurringJob.AddOrUpdate<FileBackupService>(x => x.BackupFiles(), Cron.MinuteInterval(2));
 
 RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => service.Transfer(), "*/5 * * * *");
+RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(), "0 0 * * 0");
 
 
 app.Run();
