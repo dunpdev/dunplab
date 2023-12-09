@@ -1,7 +1,10 @@
 using DUNPLab.API.Infrastructure;
+using DUNPLab.API.Jobs.PacijentiJobs;
+using DUNPLab.API.Services.Pacijenti;
 using DUNPLab.API.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +18,16 @@ builder.Services.AddHangfire(config =>
     config.UseRecommendedSerializerSettings();
     config.UseSqlServerStorage(builder.Configuration.GetConnectionString("default"));
 });
-builder.Services.AddHangfireServer();
-
+builder.Services.AddScoped<IPacijentiService, PacijentiService>();
+builder.Services.AddScoped<IPacijentiJobRegistrator, PacijentiJobRegistrator>();
+builder.Services.AddHangfireServer((provider, serverOptions) =>
+{
+    using (var serviceScope = provider.CreateScope())
+    {
+        var pacijentiRegistrator = serviceScope.ServiceProvider.GetRequiredService<IPacijentiJobRegistrator>();
+        pacijentiRegistrator.Register();
+    }
+});
 builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
 builder.Services.AddControllers();
