@@ -4,7 +4,6 @@ using DUNPLab.API.Services.Pacijenti;
 using DUNPLab.API.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
 using DUNPLab.API.Jobs;
 using Microsoft.Extensions.Options;
 
@@ -59,5 +58,6 @@ RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => se
 RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(), "0 0 * * 0");
 
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
+RecurringJob.AddOrUpdate<ProcessedFilesRemoverJob>(x => x.DeleteProcessedResults(), Cron.Daily(13, 30));
 
 app.Run();
