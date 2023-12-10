@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DUNPLab.API.Migrations
 {
     [DbContext(typeof(DunpContext))]
-    [Migration("20231207152623_Initial")]
-    partial class Initial
+    [Migration("20231210133805_addReport")]
+    partial class addReport
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,48 @@ namespace DUNPLab.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DUNPLab.API.Models.ATNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.NotificationRecipient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RecipientName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("Recipients");
+                });
 
             modelBuilder.Entity("DUNPLab.API.Models.Pacijent", b =>
                 {
@@ -95,6 +137,9 @@ namespace DUNPLab.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool?>("JeLiUGranicama")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Obradjen")
                         .HasColumnType("bit");
 
                     b.Property<double?>("Vrednost")
@@ -275,9 +320,14 @@ namespace DUNPLab.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PacijentId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdTestiranja");
+
+                    b.HasIndex("PacijentId");
 
                     b.ToTable("Uzorci");
                 });
@@ -310,6 +360,17 @@ namespace DUNPLab.API.Migrations
                     b.ToTable("VrednostiOdMasine");
                 });
 
+            modelBuilder.Entity("DUNPLab.API.Models.NotificationRecipient", b =>
+                {
+                    b.HasOne("DUNPLab.API.Models.ATNotification", "Notification")
+                        .WithMany("Recipients")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notification");
+                });
+
             modelBuilder.Entity("DUNPLab.API.Models.Rezultat", b =>
                 {
                     b.HasOne("DUNPLab.API.Models.Supstanca", "Supstanca")
@@ -337,6 +398,12 @@ namespace DUNPLab.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DUNPLab.API.Models.Pacijent", "Pacijent")
+                        .WithMany()
+                        .HasForeignKey("PacijentId");
+
+                    b.Navigation("Pacijent");
+
                     b.Navigation("Testiranje");
                 });
 
@@ -349,6 +416,11 @@ namespace DUNPLab.API.Migrations
                         .IsRequired();
 
                     b.Navigation("RezultatOdMasine");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.ATNotification", b =>
+                {
+                    b.Navigation("Recipients");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>

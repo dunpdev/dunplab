@@ -22,5 +22,8 @@ namespace DUNPLab.API.Models
         public ICollection<Rezultat> Rezultati { get; set; }
         public string Izmenio { get; set; } // osoba koja je izmenila podatke
         public DateTime? IzmenioDatumVreme { get; set; } // datum i vreme kada su podaci izmenjeni
+        public int? PacijentId { get; set; }
+        [ForeignKey("PacijentId")]
+        public Pacijent Pacijent { get; set; }
     }
 }

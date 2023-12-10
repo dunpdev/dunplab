@@ -11,6 +11,8 @@
 		<PackageReference Include="Hangfire" Version="1.8.6" />
 		<PackageReference Include="Hangfire.Core" Version="1.8.6" />
 		<PackageReference Include="Hangfire.SqlServer" Version="1.8.6" />
+		<PackageReference Include="iTextSharp" Version="5.5.13.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -27,6 +29,5 @@
 
 	<ItemGroup>
 		<Folder Include="Controllers\" />
-		<Folder Include="Services\" />
 	</ItemGroup>
 </Project>
