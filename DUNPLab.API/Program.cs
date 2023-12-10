@@ -5,6 +5,9 @@ using DUNPLab.API.Models;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using DUNPLab.API.Services.Pacijenti;
+using DUNPLab.API.Jobs;
+using Microsoft.Extensions.Options;
+using DUNPLab.API.Services.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +27,11 @@ builder.Services.AddHangfireServer();
 builder.Services.AddScoped<IBackgroundJobsService, BackgroundJobsService>();
 
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
+builder.Services.AddTransient<IMailService,MailService>(); //registrujemo mail service
 builder.Services.AddTransient<IArhivirajPacijenteService, ArhivirajPacijenteService>();
 builder.Services.AddTransient<IEmailReportService, EmailReportService>();
 
 builder.Services.AddTransient<IReportSupstancaService, ReportSupstancaService>();
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -71,5 +74,7 @@ RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Dai
 RecurringJob.AddOrUpdate<IArhivirajPacijenteService>("MuhamedovJob", x => x.ArhivirajPacijente(), Cron.Daily(12));
 RecurringJob.AddOrUpdate<ProcessedFilesRemoverJob>(x => x.DeleteProcessedResults(), Cron.Daily(13, 30));
 RecurringJob.AddOrUpdate<IBackgroundJobsServiceHalida>(x => x.PrepareEmail(), Cron.Daily(16));
+
+RecurringJob.AddOrUpdate<IMailService>("EmailObavestenja",service => service.GetZahteveZaObavestenja(),"*/2 * * * *");
 
 app.Run();
