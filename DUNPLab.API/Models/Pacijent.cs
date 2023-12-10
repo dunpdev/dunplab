@@ -14,5 +14,7 @@
         public string JMBG { get; set; }
         public string BrojDokumenta { get; set; }
         public DateTime? DatumIstekaDokumenta { get; set; }
+        public bool DaLiJeArhiviran { get; set; } = false;
+        public ICollection<Zahtev> Zahtevi { get; set; }
     }
 }
