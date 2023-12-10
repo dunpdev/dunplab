@@ -106,7 +106,7 @@ namespace DUNPLab.API.Migrations
                             Pol = "F",
                             Prezime = "Doe",
                             Telefon = "0987654321"
-                        });
+                });
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Rezultat", b =>
@@ -136,6 +136,33 @@ namespace DUNPLab.API.Migrations
                     b.HasIndex("IdUzorka");
 
                     b.ToTable("Rezultati");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DatumVreme")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImeIPrezime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("JesuLiPrebaceni")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("KodEpruvete")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RezultatiOdMasine");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Supstanca", b =>
@@ -208,7 +235,7 @@ namespace DUNPLab.API.Migrations
                             Opis = "Description for Substance 2",
                             Oznaka = "S2",
                             Tip = "Type 2"
-                        });
+                });
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Testiranje", b =>
@@ -295,7 +322,7 @@ namespace DUNPLab.API.Migrations
                             TestOdradio = "Tester 2",
                             UkupnaCena = 400.0,
                             ZahtevId = 2
-                        });
+                });
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Uzorak", b =>
@@ -518,6 +545,49 @@ namespace DUNPLab.API.Migrations
 
                     b.Navigation("Testiranje");
                 });
+            modelBuilder.Entity("DUNPLab.API.Models.VrednostOdMasine", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                b.Property<bool>("JeLiBiloGreske")
+                    .HasColumnType("bit");
+
+                b.Property<string>("OznakaSubstance")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("RezultatOdMasineId")
+                    .HasColumnType("int");
+
+                b.Property<double>("Vrednost")
+                    .HasColumnType("float");
+
+                b.HasKey("Id");
+
+                b.HasIndex("RezultatOdMasineId");
+
+                b.ToTable("VrednostiOdMasine");
+            });
+
+            modelBuilder.Entity("DUNPLab.API.Models.VrednostOdMasine", b =>
+            {
+                b.HasOne("DUNPLab.API.Models.RezultatOdMasine", "RezultatOdMasine")
+                    .WithMany("VrednostiOdMasine")
+                    .HasForeignKey("RezultatOdMasineId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("RezultatOdMasine");
+            });
+
+            modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
+            {
+                b.Navigation("VrednostiOdMasine");
+            });
 
             modelBuilder.Entity("DUNPLab.API.Models.Zahtev", b =>
                 {
@@ -573,7 +643,6 @@ namespace DUNPLab.API.Migrations
 
                     b.Navigation("ZahtevSupstance");
                 });
-#pragma warning restore 612, 618
         }
     }
 }

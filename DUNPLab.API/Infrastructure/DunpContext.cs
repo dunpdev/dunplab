@@ -7,6 +7,7 @@ namespace DUNPLab.API.Infrastructure
     {
         public DunpContext(DbContextOptions<DunpContext> options) : base(options)
         {
+
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,5 +56,9 @@ namespace DUNPLab.API.Infrastructure
         public DbSet<Rezultat> Rezultati { get; set; }
         public DbSet<Zahtev> Zahtevi { get; set;}
         public DbSet<ZahtevSubstanca> ZahtevSubstance { get; set; }
+        public DbSet<RezultatOdMasine> RezultatiOdMasine { get; set; }
+        public DbSet<VrednostOdMasine> VrednostiOdMasine { get; set; }
+        public DbSet<ATNotification> Notifications { get; set; }
+        public DbSet<NotificationRecipient> Recipients { get; set; }
     }
 }

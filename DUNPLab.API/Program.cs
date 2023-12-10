@@ -44,6 +44,6 @@ app.UseHangfireServer();
 app.UseHangfireDashboard();
 
 // Add this line to schedule your job
-RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.Rezultati(), "*/10 * * * * *");
+RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.Rezultati(), "0 */10 * * * *");
 
 app.Run();
