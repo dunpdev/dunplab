@@ -65,4 +65,6 @@ RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Dai
 RecurringJob.AddOrUpdate<IArhivirajPacijenteService>("MuhamedovJob", x => x.ArhivirajPacijente(), Cron.Daily(12));
 RecurringJob.AddOrUpdate<ProcessedFilesRemoverJob>(x => x.DeleteProcessedResults(), Cron.Daily(13, 30));
 
+RecurringJob.AddOrUpdate<DUNPLab.API.Services.BackgroundJobAlmedina>(x => x.SendEmailJob(), Cron.Daily);
+
 app.Run();
