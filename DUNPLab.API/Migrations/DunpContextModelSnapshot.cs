@@ -262,7 +262,12 @@ namespace DUNPLab.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ZahtevId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ZahtevId");
 
                     b.ToTable("Supstance");
                 });
@@ -364,14 +369,9 @@ namespace DUNPLab.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PacijentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdTestiranja");
-
-                    b.HasIndex("PacijentId");
 
                     b.ToTable("Uzorci");
                 });
@@ -402,6 +402,39 @@ namespace DUNPLab.API.Migrations
                     b.HasIndex("RezultatOdMasineId");
 
                     b.ToTable("VrednostiOdMasine");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.Zahtev", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DatumTestiranja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("JeLiObradjen")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Metode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PacijentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TestiranjeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PacijentId");
+
+                    b.HasIndex("TestiranjeId");
+
+                    b.ToTable("Zahtevi");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.NotificationRecipient", b =>
@@ -453,6 +486,13 @@ namespace DUNPLab.API.Migrations
                     b.Navigation("Uzorak");
                 });
 
+            modelBuilder.Entity("DUNPLab.API.Models.Supstanca", b =>
+                {
+                    b.HasOne("DUNPLab.API.Models.Zahtev", null)
+                        .WithMany("Supstance")
+                        .HasForeignKey("ZahtevId");
+                });
+
             modelBuilder.Entity("DUNPLab.API.Models.Uzorak", b =>
                 {
                     b.HasOne("DUNPLab.API.Models.Testiranje", "Testiranje")
@@ -460,12 +500,6 @@ namespace DUNPLab.API.Migrations
                         .HasForeignKey("IdTestiranja")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("DUNPLab.API.Models.Pacijent", "Pacijent")
-                        .WithMany()
-                        .HasForeignKey("PacijentId");
-
-                    b.Navigation("Pacijent");
 
                     b.Navigation("Testiranje");
                 });
@@ -479,6 +513,21 @@ namespace DUNPLab.API.Migrations
                         .IsRequired();
 
                     b.Navigation("RezultatOdMasine");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.Zahtev", b =>
+                {
+                    b.HasOne("DUNPLab.API.Models.Pacijent", "Pacijent")
+                        .WithMany()
+                        .HasForeignKey("PacijentId");
+
+                    b.HasOne("DUNPLab.API.Models.Testiranje", "Testiranje")
+                        .WithMany()
+                        .HasForeignKey("TestiranjeId");
+
+                    b.Navigation("Pacijent");
+
+                    b.Navigation("Testiranje");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.ATNotification", b =>
@@ -499,6 +548,11 @@ namespace DUNPLab.API.Migrations
             modelBuilder.Entity("DUNPLab.API.Models.Uzorak", b =>
                 {
                     b.Navigation("Rezultati");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.Zahtev", b =>
+                {
+                    b.Navigation("Supstance");
                 });
 #pragma warning restore 612, 618
         }

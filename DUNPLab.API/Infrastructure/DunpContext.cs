@@ -22,5 +22,8 @@ namespace DUNPLab.API.Infrastructure
 
         public DbSet<Models.File> Files { get; set; }
 
+        public DbSet<Zahtev> Zahtevi { get; set; }
+
+
     }
 }

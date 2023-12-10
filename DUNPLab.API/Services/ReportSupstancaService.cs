@@ -1,9 +1,11 @@
 ﻿using DUNPLab.API.Infrastructure;
 using DUNPLab.API.Models;
-using System.Reflection.Metadata;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DUNPLab.API.Services
 {
@@ -18,15 +20,20 @@ namespace DUNPLab.API.Services
 
         public void GeneratePdfReport()
         {
-            var pacijenti = _context.Pacijenti.ToList();
+            var pacijentiSaRezultatima = _context.Pacijenti
+                .Where(p => _context.Zahtevi
+                    .Include(z => z.Testiranje.Uzorci)
+                    .ThenInclude(u => u.Rezultati)
+                    .Any(z => z.PacijentId == p.Id && z.Testiranje.Uzorci.Any(u => u.Rezultati.Any())))
+                .ToList();
 
-            foreach (var pacijent in pacijenti)
+            foreach (var pacijent in pacijentiSaRezultatima)
             {
                 var pdfPath = Path.Combine("C:\\Users\\Dzejlana\\Downloads", $"Izvestaj_{pacijent.Ime}_{pacijent.Prezime}.pdf");
 
                 using (var fs = new FileStream(pdfPath, FileMode.Create))
                 {
-                    var document = new iTextSharp.text.Document();
+                    var document = new Document();
                     var writer = PdfWriter.GetInstance(document, fs);
 
                     document.Open();
@@ -36,55 +43,52 @@ namespace DUNPLab.API.Services
                         SpacingAfter = 15f
                     });
 
-
-                    var uzorci = _context.Uzorci
-                        .Include(u => u.Rezultati).ThenInclude(r => r.Supstanca)
-                        .Where(u => u.PacijentId == pacijent.Id)
+                    var zahtevi = _context.Zahtevi
+                        .Include(z => z.Testiranje.Uzorci).ThenInclude(u => u.Rezultati).ThenInclude(r => r.Supstanca)
+                        .Include(z => z.Pacijent)
+                        .Where(z => z.PacijentId == pacijent.Id)
                         .ToList();
 
                     var supstanceCount = new Dictionary<Supstanca, int>();
 
-                    foreach (var uzorak in uzorci)
+                    foreach (var zahtev in zahtevi)
                     {
-
-                        foreach (var rezultat in uzorak.Rezultati)
+                        foreach (var uzorak in zahtev.Testiranje.Uzorci)
                         {
-                            Console.WriteLine($"Supstanca: {rezultat.Supstanca.Naziv}, JeLiUGranicama: {rezultat.JeLiUGranicama}");
-
-
-
-                            if (rezultat.JeLiUGranicama == true)
+                            foreach (var rezultat in uzorak.Rezultati)
                             {
-                                if (!supstanceCount.ContainsKey(rezultat.Supstanca))
+                                Console.WriteLine($"Supstanca: {rezultat.Supstanca.Naziv}, JeLiUGranicama: {rezultat.JeLiUGranicama}");
+
+                                if (rezultat.JeLiUGranicama == true)
                                 {
-                                    supstanceCount[rezultat.Supstanca] = 1;
-                                }
-                                else
-                                {
-                                    supstanceCount[rezultat.Supstanca]++;
+                                    if (!supstanceCount.ContainsKey(rezultat.Supstanca))
+                                    {
+                                        supstanceCount[rezultat.Supstanca] = 1;
+                                    }
+                                    else
+                                    {
+                                        supstanceCount[rezultat.Supstanca]++;
+                                    }
                                 }
                             }
                         }
-
-
                     }
 
                     var sortedSupstance = supstanceCount.OrderByDescending(kv => kv.Value);
-
 
                     var table = new PdfPTable(3);
                     table.AddCell("Naziv supstance");
                     table.AddCell("Broj pozitivnih rezultata");
                     table.AddCell("Procentualno");
+
                     foreach (var kvp in sortedSupstance)
                     {
-
                         var supstanca = kvp.Key;
                         var positiveResults = kvp.Value;
 
                         table.AddCell(supstanca.Naziv);
                         table.AddCell(positiveResults.ToString());
-                        table.AddCell($"{(double)positiveResults / uzorci.Count:P}");
+                        table.AddCell($"{(double)positiveResults / zahtevi.Count:P}");
                     }
 
                     document.Add(table);
@@ -102,6 +106,7 @@ namespace DUNPLab.API.Services
                         }
                         pdfBytes = memoryStream.ToArray();
                     }
+
                     var file = new Models.File
                     {
                         Ime = $"Izvestaj_{pacijent.Ime}_{pacijent.Prezime}.pdf",
@@ -117,11 +122,11 @@ namespace DUNPLab.API.Services
                         idPacijent = pacijent.Id,
                         IdFile = file.Id
                     };
+
                     _context.Reports.Add(report);
                     _context.SaveChanges();
                 }
             }
         }
-
     }
 }
