@@ -11,5 +11,6 @@
         public double? GornjaGranica { get; set; }
         public string MetodTestiranja { get; set; }
         public double Cena { get; set; }
+        public List<ZahtevSubstanca> ZahtevSupstance { get; set; }
     }
 }
