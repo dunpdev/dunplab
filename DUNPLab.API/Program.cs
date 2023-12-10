@@ -20,6 +20,9 @@ builder.Services.AddHangfire(config =>
     config.UseRecommendedSerializerSettings();
     config.UseSqlServerStorage(builder.Configuration.GetConnectionString("default"));
 });
+
+builder.Services.AddScoped<ZahtevBackgroundService>();
+
 builder.Services.AddScoped<IPacijentiService, PacijentiService>();
 /*builder.Services.AddScoped<IPacijentiJobRegistrator, PacijentiJobRegistrator>(); Comment out job registrator  */
 builder.Services.AddHangfireServer();
@@ -50,6 +53,9 @@ app.MapControllers();
 app.UseHangfireServer();
 
 app.UseHangfireDashboard();
+
+var zahtevBackgroundService = app.Services.GetRequiredService<ZahtevBackgroundService>();
+zahtevBackgroundService.ScheduleZahtevCreation();
 
 RecurringJob.AddOrUpdate<IOdredjivanjeStatusa>("odredjivanje-statusa", service => service.Odredi(), "*/5 * * * *");
 
