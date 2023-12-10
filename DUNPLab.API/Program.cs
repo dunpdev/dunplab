@@ -25,6 +25,9 @@ builder.Services.AddHangfireServer();
 builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
+builder.Services.AddTransient<IEmailReportService, EmailReportService>();
+
+builder.Services.AddTransient<IReportSupstancaService, ReportSupstancaService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
