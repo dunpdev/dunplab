@@ -18,5 +18,8 @@ namespace DUNPLab.API.Infrastructure
         public DbSet<VrednostOdMasine> VrednostiOdMasine { get; set; }
         public DbSet<ATNotification> Notifications { get; set; }
         public DbSet<NotificationRecipient> Recipients { get; set; }
+        public DbSet<Email> Emails { get; set; }
+        public DbSet<DUNPLab.API.Models.File> Files { get; set; }
+        public DbSet<Report> Reports { get; set; }
     }
 }
