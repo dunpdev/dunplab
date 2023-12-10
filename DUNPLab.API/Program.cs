@@ -4,7 +4,6 @@ using DUNPLab.API.Services.Pacijenti;
 using DUNPLab.API.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
 using DUNPLab.API.Jobs;
 using Microsoft.Extensions.Options;
 
@@ -27,6 +26,9 @@ builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
 builder.Services.AddTransient<IArhivirajPacijenteService, ArhivirajPacijenteService>();
+builder.Services.AddTransient<IEmailReportService, EmailReportService>();
+
+builder.Services.AddTransient<IReportSupstancaService, ReportSupstancaService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -61,5 +63,6 @@ RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(
 
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
 RecurringJob.AddOrUpdate<IArhivirajPacijenteService>("MuhamedovJob", x => x.ArhivirajPacijente(), Cron.Daily(12));
+RecurringJob.AddOrUpdate<ProcessedFilesRemoverJob>(x => x.DeleteProcessedResults(), Cron.Daily(13, 30));
 
 app.Run();
