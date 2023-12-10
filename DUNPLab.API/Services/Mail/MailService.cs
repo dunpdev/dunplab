@@ -48,6 +48,7 @@ namespace DUNPLab.API.Services.Mail
 
         public async Task GetZahteveZaObavestenja()
         {
+            //await Sendmail("vakson12@gmail.com");  //Test funkcije za slanje mejlova
             var result = await _context.Zahtevi.Where(zaht => zaht.JeLiObradjen == true).Include(zaht => zaht.Testiranje).Include(zaht=>zaht.Pacijent).ToListAsync();
 
             DateTime inFiveMinutes = DateTime.UtcNow.AddMinutes(5);
@@ -56,7 +57,7 @@ namespace DUNPLab.API.Services.Mail
             {
                 if(zaht.Testiranje.DatumVremeTestiranja == inFiveMinutes) //Provera da li je pregled za 5 minuta
                 {
-                    await Sendmail(zaht.Pacijent.Email);
+                    await Sendmail(zaht.Pacijent.Email);  //AKo jeste saljemo mejl
                 }
             }
 
