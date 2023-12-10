@@ -52,12 +52,14 @@ namespace DUNPLab.API.Services.Mail
             var result = await _context.Zahtevi.Where(zaht => zaht.JeLiObradjen == true).Include(zaht => zaht.Testiranje).Include(zaht=>zaht.Pacijent).ToListAsync();
 
             DateTime inFiveMinutes = DateTime.UtcNow.AddMinutes(5);
-
-            foreach (var zaht in result)
+            if (result.Count > 0)
             {
-                if(zaht.Testiranje.DatumVremeTestiranja == inFiveMinutes) //Provera da li je pregled za 5 minuta
+                foreach (var zaht in result)
                 {
-                    await Sendmail(zaht.Pacijent.Email);  //AKo jeste saljemo mejl
+                    if (zaht.Testiranje.DatumVremeTestiranja == inFiveMinutes) //Provera da li je pregled za 5 minuta
+                    {
+                        await Sendmail(zaht.Pacijent.Email);  //AKo jeste saljemo mejl
+                    }
                 }
             }
 
