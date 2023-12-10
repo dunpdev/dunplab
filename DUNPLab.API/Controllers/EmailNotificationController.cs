@@ -9,9 +9,9 @@ namespace DUNPLab.API.Controllers
     public class EmailNotificationController : Controller
     {
         private readonly DunpContext context;
-        private readonly IBackgroundJobsService backgroundJobsService;
+        private readonly IBackgroundJobsServiceHalida backgroundJobsService;
 
-        public EmailNotificationController(DunpContext context, IBackgroundJobsService backgroundJobsService)
+        public EmailNotificationController(DunpContext context, IBackgroundJobsServiceHalida backgroundJobsService)
         {
             this.context = context;
             this.backgroundJobsService = backgroundJobsService;

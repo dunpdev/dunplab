@@ -1,6 +1,6 @@
 ﻿namespace DUNPLab.API.Jobs
 {
-    public interface IBackgroundJobsService
+    public interface IBackgroundJobsServiceHalida
     {
         Task PrepareEmail();
     }

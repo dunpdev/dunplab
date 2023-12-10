@@ -3,17 +3,15 @@ using DUNPLab.API.Infrastructure;
 using DUNPLab.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Net;
-using System.Net.Mail;
 
 namespace DUNPLab.API.Jobs;
 
-public class BackgroundJobsService : IBackgroundJobsService
+public class BackgroundJobsServiceHalida : IBackgroundJobsServiceHalida
 {
     private readonly DunpContext context;
     private readonly GmailCredentials configuration;
 
-    public BackgroundJobsService(DunpContext context, IOptions<GmailCredentials> configuration)
+    public BackgroundJobsServiceHalida(DunpContext context, IOptions<GmailCredentials> configuration)
     {
         this.context = context;
         this.configuration = configuration.Value;
