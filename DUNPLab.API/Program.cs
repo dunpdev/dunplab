@@ -26,6 +26,7 @@ builder.Services.AddHangfireServer();
 builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
+builder.Services.AddTransient<IArhivirajPacijenteService, ArhivirajPacijenteService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -59,5 +60,6 @@ RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => se
 RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(), "0 0 * * 0");
 
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
+RecurringJob.AddOrUpdate<IArhivirajPacijenteService>("MuhamedovJob", x => x.ArhivirajPacijente(), Cron.Daily(12));
 
 app.Run();
