@@ -15,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DunpContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
 
+builder.Services.AddSingleton<IEmailJobService, EmailJobService>();
+
 builder.Services.AddHangfire(config =>
 {
     config.UseSimpleAssemblyNameTypeSerializer();
@@ -68,7 +70,7 @@ RecurringJob.AddOrUpdate<IOdredjivanjeStatusa>("odredjivanje-statusa", service =
 RecurringJob.AddOrUpdate<FileBackupService>(x => x.BackupFiles(), Cron.MinuteInterval(2));
 
 RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => service.Transfer(), "*/5 * * * *");
-RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(), "0 0 * * 0");
+RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service => service.Seed(), "0 0 * * 0");
 
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
 RecurringJob.AddOrUpdate<IArhivirajPacijenteService>("MuhamedovJob", x => x.ArhivirajPacijente(), Cron.Daily(12));
@@ -78,5 +80,9 @@ RecurringJob.AddOrUpdate<IBackgroundJobsServiceHalida>(x => x.PrepareEmail(), Cr
 RecurringJob.AddOrUpdate<IMailService>("EmailObavestenja",service => service.GetZahteveZaObavestenja(),"*/2 * * * *");
 
 RecurringJob.AddOrUpdate<ProcessedRequestRemover>(x => x.RemoveProcessedRequests(), Cron.Hourly);
+
+// Configure Hangfire jobs from the service
+var emailJobService = app.Services.GetRequiredService<IEmailJobService>();
+emailJobService.EnqueueEmailJob();
 
 app.Run();
