@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using DUNPLab.API.Jobs;
 using Microsoft.Extensions.Options;
+using DUNPLab.API.Services.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,7 @@ builder.Services.AddHangfireServer();
 builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
-
+builder.Services.AddTransient<IMailService,MailService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -59,5 +60,7 @@ RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => se
 RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(), "0 0 * * 0");
 
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
+
+RecurringJob.AddOrUpdate<IMailService>("EmailObavestenja",service => service.GetZahteveZaObavestenja(),"*/2 * * * *");
 
 app.Run();
