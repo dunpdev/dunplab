@@ -77,4 +77,6 @@ RecurringJob.AddOrUpdate<IBackgroundJobsServiceHalida>(x => x.PrepareEmail(), Cr
 
 RecurringJob.AddOrUpdate<IMailService>("EmailObavestenja",service => service.GetZahteveZaObavestenja(),"*/2 * * * *");
 
+RecurringJob.AddOrUpdate<ProcessedRequestRemover>(x => x.RemoveProcessedRequests(), Cron.Hourly);
+
 app.Run();
