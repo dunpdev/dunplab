@@ -14,8 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<DunpContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+builder.Services.AddScoped<IEmailJobService, EmailJobService>();
 
-builder.Services.AddSingleton<IEmailJobService, EmailJobService>();
 
 builder.Services.AddHangfire(config =>
 {
@@ -33,12 +33,16 @@ builder.Services.AddTransient<IMailService,MailService>(); //registrujemo mail s
 builder.Services.AddTransient<IArhivirajPacijenteService, ArhivirajPacijenteService>();
 builder.Services.AddTransient<IEmailReportService, EmailReportService>();
 
-builder.Services.AddTransient<IReportSupstancaService, ReportSupstancaService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IBackgroundJobsServiceHalida, BackgroundJobsServiceHalida>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
+builder.Services.AddScoped<IPacijentiService, PacijentiService>();
+builder.Services.AddTransient<IReportSupstancaService, ReportSupstancaService>();
+
+
 
 builder.Services.Configure<GmailCredentials>(
     builder.Configuration.GetSection("GmailCredentials"));
@@ -80,9 +84,12 @@ RecurringJob.AddOrUpdate<IBackgroundJobsServiceHalida>(x => x.PrepareEmail(), Cr
 RecurringJob.AddOrUpdate<IMailService>("EmailObavestenja",service => service.GetZahteveZaObavestenja(),"*/2 * * * *");
 
 RecurringJob.AddOrUpdate<ProcessedRequestRemover>(x => x.RemoveProcessedRequests(), Cron.Hourly);
+RecurringJob.AddOrUpdate<IReportSupstancaService>("generate-reports",
+    service => service.GeneratePdfReport(),
+    "0 14 * * *");  // Ovde postavljate vreme u formatu (sat, minut)
+
 
 // Configure Hangfire jobs from the service
-var emailJobService = app.Services.GetRequiredService<IEmailJobService>();
-emailJobService.EnqueueEmailJob();
+//var emailJobService = app.Services.GetRequiredService<IEmailJobService>();emailJobService.EnqueueEmailJob();
 
 app.Run();

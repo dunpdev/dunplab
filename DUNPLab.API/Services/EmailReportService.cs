@@ -29,7 +29,7 @@ namespace DUNPLab.API.Services
                         Body = "Poštovani, u prilogu se nalaze rezultati testiranja.",
                         From = "edinakucevic26@gmail.com",
                         Sent = null,
-                        IdFile = report.FileId
+                        IdFile = report.IdFile
 
                     };
                     _context.Emails.Add(email);

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DUNPLab.API.Migrations
 {
     [DbContext(typeof(DunpContext))]
-    [Migration("20231207091556_init")]
-    partial class init
+    [Migration("20231210204646_report")]
+    partial class report
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,137 @@ namespace DUNPLab.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DUNPLab.API.Models.ATNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.Email", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("From")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IdFile")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Sent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("To")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdFile");
+
+                    b.ToTable("Emails");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.EmailNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("From")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeOfSending")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailNotifications");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.File", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Ime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("JeLiObrisan")
+                        .HasColumnType("bit");
+
+                    b.Property<byte[]>("Sadrzaj")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.NotificationRecipient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RecipientName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("Recipients");
+                });
 
             modelBuilder.Entity("DUNPLab.API.Models.Pacijent", b =>
                 {
@@ -40,6 +171,9 @@ namespace DUNPLab.API.Migrations
                     b.Property<string>("BrojDokumenta")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DaLiJeArhiviran")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("DatumIstekaDokumenta")
                         .HasColumnType("datetime2");
@@ -85,6 +219,7 @@ namespace DUNPLab.API.Migrations
                             Id = 1,
                             Adresa = "123 Main St",
                             BrojDokumenta = "AB123456",
+                            DaLiJeArhiviran = false,
                             DatumIstekaDokumenta = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DatumRodjenja = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "john.doe@example.com",
@@ -100,6 +235,7 @@ namespace DUNPLab.API.Migrations
                             Id = 2,
                             Adresa = "456 Elm St",
                             BrojDokumenta = "CD987654",
+                            DaLiJeArhiviran = false,
                             DatumIstekaDokumenta = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DatumRodjenja = new DateTime(1985, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jane.doe@example.com",
@@ -110,6 +246,29 @@ namespace DUNPLab.API.Migrations
                             Prezime = "Doe",
                             Telefon = "0987654321"
                         });
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.Report", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IdFile")
+                        .HasColumnType("int");
+
+                    b.Property<int>("idPacijent")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdFile");
+
+                    b.HasIndex("idPacijent");
+
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Rezultat", b =>
@@ -129,6 +288,9 @@ namespace DUNPLab.API.Migrations
                     b.Property<bool?>("JeLiUGranicama")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("Obradjen")
+                        .HasColumnType("bit");
+
                     b.Property<double?>("Vrednost")
                         .HasColumnType("float");
 
@@ -139,6 +301,33 @@ namespace DUNPLab.API.Migrations
                     b.HasIndex("IdUzorka");
 
                     b.ToTable("Rezultati");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DatumVreme")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImeIPrezime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("JesuLiPrebaceni")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("KodEpruvete")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RezultatiOdMasine");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Supstanca", b =>
@@ -346,9 +535,14 @@ namespace DUNPLab.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PacijentId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdTestiranja");
+
+                    b.HasIndex("PacijentId");
 
                     b.ToTable("Uzorci");
 
@@ -365,7 +559,8 @@ namespace DUNPLab.API.Migrations
                             KonacanRezultat = "Result 1",
                             Kutija = "BX20230101000001",
                             MetodTestiranja = "Method 1",
-                            Naziv = "Sample 1"
+                            Naziv = "Sample 1",
+                            PacijentId = 0
                         },
                         new
                         {
@@ -379,8 +574,37 @@ namespace DUNPLab.API.Migrations
                             KonacanRezultat = "Result 2",
                             Kutija = "BX20230201000002",
                             MetodTestiranja = "Method 2",
-                            Naziv = "Sample 2"
+                            Naziv = "Sample 2",
+                            PacijentId = 0
                         });
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.VrednostOdMasine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("JeLiBiloGreske")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OznakaSubstance")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RezultatOdMasineId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Vrednost")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RezultatOdMasineId");
+
+                    b.ToTable("VrednostiOdMasine");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Zahtev", b =>
@@ -424,7 +648,8 @@ namespace DUNPLab.API.Migrations
                             DatumTestiranja = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             JeLiObradjen = false,
                             Metode = "[]",
-                            PacijentId = 1
+                            PacijentId = 1,
+                            TestiranjeId = 1
                         },
                         new
                         {
@@ -432,7 +657,8 @@ namespace DUNPLab.API.Migrations
                             DatumTestiranja = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             JeLiObradjen = false,
                             Metode = "[]",
-                            PacijentId = 2
+                            PacijentId = 2,
+                            TestiranjeId = 2
                         });
                 });
 
@@ -485,6 +711,45 @@ namespace DUNPLab.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DUNPLab.API.Models.Email", b =>
+                {
+                    b.HasOne("DUNPLab.API.Models.File", "File")
+                        .WithMany()
+                        .HasForeignKey("IdFile");
+
+                    b.Navigation("File");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.NotificationRecipient", b =>
+                {
+                    b.HasOne("DUNPLab.API.Models.ATNotification", "Notification")
+                        .WithMany("Recipients")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notification");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.Report", b =>
+                {
+                    b.HasOne("DUNPLab.API.Models.File", "File")
+                        .WithMany()
+                        .HasForeignKey("IdFile")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DUNPLab.API.Models.Pacijent", "Pacijent")
+                        .WithMany()
+                        .HasForeignKey("idPacijent")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("File");
+
+                    b.Navigation("Pacijent");
+                });
+
             modelBuilder.Entity("DUNPLab.API.Models.Rezultat", b =>
                 {
                     b.HasOne("DUNPLab.API.Models.Supstanca", "Supstanca")
@@ -519,13 +784,32 @@ namespace DUNPLab.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DUNPLab.API.Models.Pacijent", "Pacijent")
+                        .WithMany()
+                        .HasForeignKey("PacijentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pacijent");
+
                     b.Navigation("Testiranje");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.VrednostOdMasine", b =>
+                {
+                    b.HasOne("DUNPLab.API.Models.RezultatOdMasine", "RezultatOdMasine")
+                        .WithMany("VrednostiOdMasine")
+                        .HasForeignKey("RezultatOdMasineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RezultatOdMasine");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Zahtev", b =>
                 {
                     b.HasOne("DUNPLab.API.Models.Pacijent", "Pacijent")
-                        .WithMany()
+                        .WithMany("Zahtevi")
                         .HasForeignKey("PacijentId");
 
                     b.HasOne("DUNPLab.API.Models.Testiranje", "Testiranje")
@@ -550,6 +834,21 @@ namespace DUNPLab.API.Migrations
                     b.Navigation("Supstanca");
 
                     b.Navigation("Zahtev");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.ATNotification", b =>
+                {
+                    b.Navigation("Recipients");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.Pacijent", b =>
+                {
+                    b.Navigation("Zahtevi");
+                });
+
+            modelBuilder.Entity("DUNPLab.API.Models.RezultatOdMasine", b =>
+                {
+                    b.Navigation("VrednostiOdMasine");
                 });
 
             modelBuilder.Entity("DUNPLab.API.Models.Supstanca", b =>
