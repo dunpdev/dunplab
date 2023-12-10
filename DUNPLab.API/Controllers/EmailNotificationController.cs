@@ -29,18 +29,10 @@ namespace DUNPLab.API.Controllers
             };
 
             context.EmailNotifications.Add(emailNotification);
-            await backgroundJobsService.PrepareEmail();
             await context.SaveChangesAsync();
             return Ok(emailNotification);
         }
 
-        //test controller za slanje emailova
-        [HttpGet("FireHnagfire", Name = "FireHnagfire")]
-        public async Task<IActionResult> FireHnagfire()
-        {
-            await backgroundJobsService.PrepareEmail();
-            return Ok();
-        }
 
     }
 }
