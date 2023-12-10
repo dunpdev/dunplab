@@ -5,7 +5,7 @@ using System.Reflection.Metadata;
 
 namespace DUNPLab.API.Services
 {
-    public class ReportSupstancaService
+    public class ReportSupstancaService : IReportSupstancaService
     {
         private readonly DunpContext _context;
 
