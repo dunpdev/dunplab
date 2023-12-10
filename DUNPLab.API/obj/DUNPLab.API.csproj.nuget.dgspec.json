@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj": {}
+    "c:\\Users\\halid\\OneDrive\\Radna površina\\faks\\IV\\ds\\lab\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj": {
+    "c:\\Users\\halid\\OneDrive\\Radna površina\\faks\\IV\\ds\\lab\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
+        "projectUniqueName": "c:\\Users\\halid\\OneDrive\\Radna površina\\faks\\IV\\ds\\lab\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
         "projectName": "DUNPLab.API",
-        "projectPath": "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
-        "packagesPath": "C:\\Users\\TarikIbrahimovic(SJJ\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\TarikIbrahimovic(SJJ\\Source\\Repos\\dunplab\\DUNPLab.API\\obj\\",
+        "projectPath": "c:\\Users\\halid\\OneDrive\\Radna površina\\faks\\IV\\ds\\lab\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
+        "packagesPath": "C:\\Users\\halid\\.nuget\\packages\\",
+        "outputPath": "c:\\Users\\halid\\OneDrive\\Radna površina\\faks\\IV\\ds\\lab\\dunplab\\DUNPLab.API\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\TarikIbrahimovic(SJJ\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\halid\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
