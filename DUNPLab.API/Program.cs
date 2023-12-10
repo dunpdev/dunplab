@@ -1,8 +1,7 @@
 using DUNPLab.API.Infrastructure;
-using DUNPLab.API.Jobs.PacijentiJobs;
-using DUNPLab.API.Services.Pacijenti;
 using DUNPLab.API.Services;
 using Hangfire;
+using Hangfire.Server;
 using Microsoft.EntityFrameworkCore;
 using DUNPLab.API.Jobs;
 using Microsoft.Extensions.Options;
@@ -19,8 +18,6 @@ builder.Services.AddHangfire(config =>
     config.UseRecommendedSerializerSettings();
     config.UseSqlServerStorage(builder.Configuration.GetConnectionString("default"));
 });
-builder.Services.AddScoped<IPacijentiService, PacijentiService>();
-/*builder.Services.AddScoped<IPacijentiJobRegistrator, PacijentiJobRegistrator>(); Comment out job registrator  */
 builder.Services.AddHangfireServer();
 builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
@@ -31,9 +28,10 @@ builder.Services.AddTransient<IEmailReportService, EmailReportService>();
 builder.Services.AddTransient<IReportSupstancaService, ReportSupstancaService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IBackgroundJobsService, BackgroundJobsService>();
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 var app = builder.Build();
 
@@ -54,6 +52,8 @@ app.UseHangfireServer();
 
 app.UseHangfireDashboard();
 
+// Add this line to schedule your job
+RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.Rezultati(), "0 */10 * * * *");
 RecurringJob.AddOrUpdate<IOdredjivanjeStatusa>("odredjivanje-statusa", service => service.Odredi(), "*/5 * * * *");
 
 RecurringJob.AddOrUpdate<FileBackupService>(x => x.BackupFiles(), Cron.MinuteInterval(2));

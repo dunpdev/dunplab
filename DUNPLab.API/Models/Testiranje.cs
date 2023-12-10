@@ -10,6 +10,8 @@ namespace DUNPLab.API.Models
         }
         public int Id { get; set; }
         public string Naziv { get; set; }
+        public int ZahtevId { get; set; }
+        public Zahtev Zahtev { get; set; }
         public double UkupnaCena { get; set; } // ukupna cena svih uzoraka
         public string NacinPlacanja { get; set; } // kartica, kes, cek, osiguranje
         public string TestOdradio { get; set; } // Osoba koja je uzela uzorak
