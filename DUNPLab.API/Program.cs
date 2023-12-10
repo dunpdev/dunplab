@@ -21,7 +21,6 @@ builder.Services.AddHangfire(config =>
 builder.Services.AddHangfireServer();
 builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 
-builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
 builder.Services.AddTransient<IArhivirajPacijenteService, ArhivirajPacijenteService>();
 builder.Services.AddTransient<IEmailReportService, EmailReportService>();
@@ -58,7 +57,6 @@ RecurringJob.AddOrUpdate<IBackgroundJobsService>(x => x.Rezultati(), "0 */10 * *
 RecurringJob.AddOrUpdate<IOdredjivanjeStatusa>("odredjivanje-statusa", service => service.Odredi(), "*/5 * * * *");
 
 RecurringJob.AddOrUpdate<FileBackupService>(x => x.BackupFiles(), Cron.MinuteInterval(2));
-RecurringJob.AddOrUpdate<IEmailService>(x => x.SendEmail(), "*/15 * * * *");
 
 RecurringJob.AddOrUpdate<ITransferRezultati>("transfer-rezultata", service => service.Transfer(), "*/5 * * * *");
 RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(), "0 0 * * 0");
