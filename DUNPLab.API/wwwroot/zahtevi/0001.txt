@@ -1,0 +1,8 @@
+﻿John Doe,
+123456,
+Glukoza,
+Crp,
+Hemoglobin
+krv,urin
+1
+1

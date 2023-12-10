@@ -60,4 +60,6 @@ RecurringJob.AddOrUpdate<IPacijentiService>("VahidovJob", service=>service.Seed(
 
 RecurringJob.AddOrUpdate<ResultsProcessingJob>(x => x.ProcessResults(), Cron.Daily(13));
 
+RecurringJob.AddOrUpdate<ProcessedRequestRemover>(x => x.RemoveProcessedRequests(), Cron.Hourly);
+
 app.Run();
