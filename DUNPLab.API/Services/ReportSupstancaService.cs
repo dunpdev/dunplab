@@ -1,7 +1,11 @@
 ﻿using DUNPLab.API.Infrastructure;
 using DUNPLab.API.Models;
 using iTextSharp.text.pdf;
-using System.Reflection.Metadata;
+using iTextSharp.text;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DUNPLab.API.Services
 {
@@ -20,7 +24,7 @@ namespace DUNPLab.API.Services
 
             foreach (var pacijent in pacijenti)
             {
-                var pdfPath = Path.Combine("C:\\Users\\edina\\Downloads", $"Izvestaj_{pacijent.Ime}_{pacijent.Prezime}.pdf");
+                var pdfPath = Path.Combine("C:\\Users\\Dzejlana\\Downloads", $"Izvestaj_{pacijent.Ime}_{pacijent.Prezime}.pdf");
 
                 using (var fs = new FileStream(pdfPath, FileMode.Create))
                 {
@@ -29,7 +33,11 @@ namespace DUNPLab.API.Services
 
                     document.Open();
 
-                    document.Add(new Paragraph($"Izveštaj za pacijenta: {pacijent.Ime} {pacijent.Prezime}"));
+                    document.Add(new Paragraph($"Izveštaj za pacijenta: {pacijent.Ime} {pacijent.Prezime}")
+                    {
+                        SpacingAfter = 15f
+                    });
+
 
                     var uzorci = _context.Uzorci
                         .Include(u => u.Rezultati).ThenInclude(r => r.Supstanca)
@@ -40,23 +48,13 @@ namespace DUNPLab.API.Services
 
                     foreach (var uzorak in uzorci)
                     {
-                        document.Add(new Paragraph($"Uzorak: {uzorak.Naziv}"));
-
-                        var resultTable = new PdfPTable(4);
-                        resultTable.AddCell("Supstanca");
-                        resultTable.AddCell("Rezultat");
-                        resultTable.AddCell("Da li je u granicama");
-                        resultTable.AddCell("Komentar");
 
                         foreach (var rezultat in uzorak.Rezultati)
                         {
                             Console.WriteLine($"Supstanca: {rezultat.Supstanca.Naziv}, JeLiUGranicama: {rezultat.JeLiUGranicama}");
 
-                            resultTable.AddCell(rezultat.Supstanca.Naziv);
 
-                            resultTable.AddCell(rezultat.JeLiUGranicama.HasValue ? (rezultat.JeLiUGranicama.Value ? "Da" : "Ne") : "N/A");
 
-                            // Dodaj ovo za prikupljanje broja pozitivnih rezultata
                             if (rezultat.JeLiUGranicama == true)
                             {
                                 if (!supstanceCount.ContainsKey(rezultat.Supstanca))
@@ -70,12 +68,12 @@ namespace DUNPLab.API.Services
                             }
                         }
 
-                        document.Add(resultTable);
+
                     }
 
                     var sortedSupstance = supstanceCount.OrderByDescending(kv => kv.Value);
 
-                    // Dodajte tabelu sa podacima o supstancama
+
                     var table = new PdfPTable(3);
                     table.AddCell("Naziv supstance");
                     table.AddCell("Broj pozitivnih rezultata");
@@ -118,14 +116,13 @@ namespace DUNPLab.API.Services
 
                     var report = new Models.Report
                     {
-                        PacijentId = pacijent.Id,
-                        FileId = file.Id
+                        idPacijent = pacijent.Id,
+                        IdFile = file.Id
                     };
                     _context.Reports.Add(report);
                     _context.SaveChanges();
                 }
             }
         }
-
     }
 }
