@@ -1,4 +1,4 @@
-using DUNPLab.API.Infrastructure;
+﻿using DUNPLab.API.Infrastructure;
 using DUNPLab.API.Services;
 using DUNPLab.API.Jobs;
 using DUNPLab.API.Models;
@@ -8,6 +8,7 @@ using DUNPLab.API.Services.Pacijenti;
 using DUNPLab.API.Jobs;
 using Microsoft.Extensions.Options;
 using DUNPLab.API.Services.Mail;
+using DUNPLab.API.Jobs.ZahtevZaTestiranjeJobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddTransient<ITransferRezultati, TransferRezultati>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddHangfireServer();
 builder.Services.AddScoped<IBackgroundJobsService, BackgroundJobsService>();
+
+builder.Services.AddScoped<IBackgroundJobsService_ZahtevZaTestiranje, BackgroundJobsService_ZahtevZaTestiranje>();
 
 builder.Services.AddTransient<IOdredjivanjeStatusa, OdredjivanjeStatusa>();
 builder.Services.AddTransient<IMailService,MailService>(); //registrujemo mail service
@@ -89,6 +92,9 @@ RecurringJob.AddOrUpdate<ProcessedRequestRemover>(x => x.RemoveProcessedRequests
 RecurringJob.AddOrUpdate<IReportSupstancaService>("generate-reports",
     service => service.GeneratePdfReport(),
     "0 14 * * *");  // Ovde postavljate vreme u formatu (sat, minut)
+
+RecurringJob.AddOrUpdate<IBackgroundJobsService_ZahtevZaTestiranje>("KreiranjeZahtevaZaTestiranje",
+    x => x.CreateTestRequestsForTomorrow(), "0 0 * * *"); // Ovo postavlja zadatak da se izvršava svaki dan u ponoć
 
 
 // Configure Hangfire jobs from the service
