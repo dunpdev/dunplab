@@ -3,6 +3,7 @@ using DUNPLab.API.Models;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,103 +25,103 @@ namespace DUNPLab.API.Services
 
             foreach (var pacijent in pacijenti)
             {
-                var pdfPath = Path.Combine("C:\\Users\\Dzejlana\\Downloads", $"Izvestaj_{pacijent.Ime}_{pacijent.Prezime}.pdf");
+                var uzorci = _context.Uzorci
+                    .Include(u => u.Rezultati).ThenInclude(r => r.Supstanca)
+                    .Where(u => u.PacijentId == pacijent.Id)
+                    .ToList();
 
-                using (var fs = new FileStream(pdfPath, FileMode.Create))
+                
+                if (uzorci.Any(uzorak => uzorak.Rezultati.Any(rezultat => rezultat.JeLiUGranicama == true)))
                 {
-                    var document = new Document();
-                    var writer = PdfWriter.GetInstance(document, fs);
+                    var putanjaDoPreuzimanja = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                    var putanjaDoPdf = Path.Combine(putanjaDoPreuzimanja, "Downloads", $"Izvestaj_{pacijent.Ime}_{pacijent.Prezime}.pdf");
 
-                    document.Open();
-
-                    document.Add(new Paragraph($"Izveštaj za pacijenta: {pacijent.Ime} {pacijent.Prezime}")
+                    using (var fs = new FileStream(putanjaDoPdf, FileMode.Create))
                     {
-                        SpacingAfter = 15f
-                    });
+                        var dokument = new Document();
+                        var pisac = PdfWriter.GetInstance(dokument, fs);
 
+                        dokument.Open();
 
-                    var uzorci = _context.Uzorci
-                        .Include(u => u.Rezultati).ThenInclude(r => r.Supstanca)
-                        .Where(u => u.PacijentId == pacijent.Id)
-                        .ToList();
-
-                    var supstanceCount = new Dictionary<Supstanca, int>();
-
-                    foreach (var uzorak in uzorci)
-                    {
-
-                        foreach (var rezultat in uzorak.Rezultati)
+                        dokument.Add(new Paragraph($"Izveštaj za pacijenta: {pacijent.Ime} {pacijent.Prezime}")
                         {
-                            Console.WriteLine($"Supstanca: {rezultat.Supstanca.Naziv}, JeLiUGranicama: {rezultat.JeLiUGranicama}");
+                            SpacingAfter = 15f
+                        });
 
+                        var supstanceCount = new Dictionary<Supstanca, int>();
 
-
-                            if (rezultat.JeLiUGranicama == true)
+                        foreach (var uzorak in uzorci)
+                        {
+                            foreach (var rezultat in uzorak.Rezultati)
                             {
-                                if (!supstanceCount.ContainsKey(rezultat.Supstanca))
+                                Console.WriteLine($"Supstanca: {rezultat.Supstanca.Naziv}, JeLiUGranicama: {rezultat.JeLiUGranicama}");
+
+                                if (rezultat.JeLiUGranicama == true)
                                 {
-                                    supstanceCount[rezultat.Supstanca] = 1;
-                                }
-                                else
-                                {
-                                    supstanceCount[rezultat.Supstanca]++;
+                                    if (!supstanceCount.ContainsKey(rezultat.Supstanca))
+                                    {
+                                        supstanceCount[rezultat.Supstanca] = 1;
+                                    }
+                                    else
+                                    {
+                                        supstanceCount[rezultat.Supstanca]++;
+                                    }
                                 }
                             }
                         }
 
+                        var sortedSupstance = supstanceCount.OrderByDescending(kv => kv.Value);
 
-                    }
+                        var table = new PdfPTable(3);
+                        table.AddCell("Naziv supstance");
+                        table.AddCell("Broj pozitivnih rezultata");
+                        table.AddCell("Procentualno");
 
-                    var sortedSupstance = supstanceCount.OrderByDescending(kv => kv.Value);
-
-
-                    var table = new PdfPTable(3);
-                    table.AddCell("Naziv supstance");
-                    table.AddCell("Broj pozitivnih rezultata");
-                    table.AddCell("Procentualno");
-                    foreach (var kvp in sortedSupstance)
-                    {
-
-                        var supstanca = kvp.Key;
-                        var positiveResults = kvp.Value;
-
-                        table.AddCell(supstanca.Naziv);
-                        table.AddCell(positiveResults.ToString());
-                        table.AddCell($"{(double)positiveResults / uzorci.Count:P}");
-                    }
-
-                    document.Add(table);
-
-                    document.Close();
-                    writer.Close();
-                    fs.Close();
-
-                    byte[] pdfBytes;
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        using (var fileStream = new FileStream(pdfPath, FileMode.Open))
+                        foreach (var kvp in sortedSupstance)
                         {
-                            fileStream.CopyTo(memoryStream);
+                            var supstanca = kvp.Key;
+                            var positiveResults = kvp.Value;
+
+                            table.AddCell(supstanca.Naziv);
+                            table.AddCell(positiveResults.ToString());
+                            table.AddCell($"{(double)positiveResults / uzorci.Count:P}");
                         }
-                        pdfBytes = memoryStream.ToArray();
+
+                        dokument.Add(table);
+
+                        dokument.Close();
+                        pisac.Close();
+                        fs.Close();
+
+                        byte[] pdfBytes;
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            using (var fileStream = new FileStream(putanjaDoPdf, FileMode.Open))
+                            {
+                                fileStream.CopyTo(memoryStream);
+                            }
+                            pdfBytes = memoryStream.ToArray();
+                        }
+
+                        var file = new Models.File
+                        {
+                            Ime = $"Izvestaj_{pacijent.Ime}_{pacijent.Prezime}.pdf",
+                            Sadrzaj = pdfBytes,
+                            JeLiObrisan = false
+                        };
+
+                        _context.Files.Add(file);
+                        _context.SaveChanges();
+
+                        var report = new Models.Report
+                        {
+                            idPacijent = pacijent.Id,
+                            IdFile = file.Id
+                        };
+
+                        _context.Reports.Add(report);
+                        _context.SaveChanges();
                     }
-                    var file = new Models.File
-                    {
-                        Ime = $"Izvestaj_{pacijent.Ime}_{pacijent.Prezime}.pdf",
-                        Sadrzaj = pdfBytes,
-                        JeLiObrisan = false
-                    };
-
-                    _context.Files.Add(file);
-                    _context.SaveChanges();
-
-                    var report = new Models.Report
-                    {
-                        idPacijent = pacijent.Id,
-                        IdFile = file.Id
-                    };
-                    _context.Reports.Add(report);
-                    _context.SaveChanges();
                 }
             }
         }
