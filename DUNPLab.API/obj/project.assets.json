@@ -4951,19 +4951,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Dzejlana\\.nuget\\packages\\": {}
+    "C:\\Users\\PC\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
       "projectName": "DUNPLab.API",
-      "projectPath": "D:\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
-      "packagesPath": "C:\\Users\\Dzejlana\\.nuget\\packages\\",
-      "outputPath": "D:\\dunplab\\DUNPLab.API\\obj\\",
+      "projectPath": "C:\\Users\\PC\\dunplab\\DUNPLab.API\\DUNPLab.API.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\PC\\dunplab\\DUNPLab.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Dzejlana\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4983,9 +4983,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "default"
       }
     },
     "frameworks": {
