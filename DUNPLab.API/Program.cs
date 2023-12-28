@@ -9,6 +9,7 @@ using DUNPLab.API.Jobs;
 using Microsoft.Extensions.Options;
 using DUNPLab.API.Services.Mail;
 using DUNPLab.API.Jobs.ZahtevZaTestiranjeJobs;
+using DUNPLab.API.Services.ZahtevZaTestiranje;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,7 @@ builder.Services.AddTransient<IBackgroundJobsServiceHalida, BackgroundJobsServic
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddScoped<IPacijentiService, PacijentiService>();
 builder.Services.AddTransient<IReportSupstancaService, ReportSupstancaService>();
+builder.Services.AddTransient<IZahtevZaTestiranje, ZahtevZaTestiranje>();
 
 
 
